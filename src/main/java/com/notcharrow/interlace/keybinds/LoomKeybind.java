@@ -3,6 +3,7 @@ package com.notcharrow.interlace.keybinds;
 import com.notcharrow.interlace.mixin.ScreenCoordinateAccessor;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.screen.v1.Screens;
+import net.fabricmc.fabric.impl.client.screen.ScreenExtensions;
 import net.minecraft.block.AbstractBannerBlock;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.ButtonTextures;
@@ -55,9 +56,13 @@ public class LoomKeybind {
 
             fillSlots(screen);
 
-            drawBannerButtons(screen);
-            drawDyeButtons(screen);
-            drawOutputButton(screen);
+            Runnable specialButtonsAdder = () -> {
+                drawBannerButtons(screen);
+                drawDyeButtons(screen);
+                drawOutputButton(screen);
+            };
+            specialButtonsAdder.run();
+            ((InterlaceLoomHacks) screen).interlace$onScreenRefreshed(specialButtonsAdder);
 		});
 	}
 
